@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lauren & Matthew — 30 Noviembre 2024</title>
+  <meta name="description" content="Invitación digital para la boda de Lauren y Matthew. Ceremonia y recepción en Greyleigh, Kiama. 30 de noviembre de 2024.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Cormorant+SC:wght@300;400;500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+  
+  <!-- GSAP y plugins -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/SplitText.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CustomEase.min.js"></script>
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- CURSOR DUAL -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- LOADER CINEMATOGRÁFICO -->
+  <div id="luxury-loader">
+    <div class="loader-bg-noise"></div>
+    <div class="loader-container">
+      <div class="envelope-premium">
+        <div class="envelope-back"></div>
+        <div class="envelope-letter">
+          <div class="letter-content">
+            <div class="letter-ornament top"></div>
+            <span class="monogram">L & M</span>
+            <span class="invite-text">30 · XI · 2024</span>
+            <div class="letter-ornament bottom"></div>
+          </div>
+        </div>
+        <div class="envelope-flap"></div>
+        <div class="envelope-front"></div>
+        <div class="envelope-seal">
+          <svg viewBox="0 0 60 60" fill="none">
+            <circle cx="30" cy="30" r="28" stroke="#c9a96e" stroke-width="1"/>
+            <circle cx="30" cy="30" r="23" stroke="#c9a96e" stroke-width="0.4" stroke-dasharray="1.5 3"/>
+            <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-family="'Cormorant SC', serif" font-size="11" fill="#c9a96e" letter-spacing="2">L&M</text>
+          </svg>
+        </div>
+      </div>
+      <div class="loader-bottom">
+        <div class="loader-line"></div>
+        <p class="loader-text">Toca para abrir la invitación</p>
+        <div class="loader-line"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main id="wedding-content" class="hidden">
+
+    <!-- ─── HERO ─── -->
+    <section class="hero" id="hero">
+      <div class="hero-bg">
+        <div class="grain-overlay"></div>
+        <div class="hero-image-wrapper">
+          <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1800&q=85" alt="Lauren & Matthew" class="hero-img" id="heroImg">
+        </div>
+        <div class="hero-gradient"></div>
+        <div class="hero-gradient-top"></div>
+      </div>
+
+      <div class="hero-content">
+        <p class="hero-eyebrow" data-split>Nos complace invitarte a celebrar</p>
+        <h1 class="hero-title">
+          <span class="name-block name-first">Lauren</span>
+          <span class="name-block ampersand-block"><em>&</em></span>
+          <span class="name-block name-second">Matthew</span>
+        </h1>
+        <div class="hero-rule">
+          <div class="rule-line left"></div>
+          <div class="rule-diamond"></div>
+          <div class="rule-line right"></div>
+        </div>
+        <div class="hero-meta">
+          <p class="hero-date">30 de Noviembre, 2024</p>
+          <span class="hero-dot">·</span>
+          <p class="hero-location">Greyleigh, Kiama</p>
+        </div>
+      </div>
+
+      <div class="scroll-cta">
+        <div class="scroll-mouse">
+          <div class="scroll-mouse-wheel"></div>
+        </div>
+        <span>Scroll</span>
+      </div>
+
+      <!-- Número de sección flotante -->
+      <div class="section-number">01</div>
+    </section>
+
+    <!-- ─── INTRO MARQUEE ─── -->
+    <div class="marquee-strip" aria-hidden="true">
+      <div class="marquee-track">
+        <span>LAUREN & MATTHEW</span>
+        <span class="marquee-diamond">✦</span>
+        <span>30 DE NOVIEMBRE</span>
+        <span class="marquee-diamond">✦</span>
+        <span>GREYLEIGH ESTATE</span>
+        <span class="marquee-diamond">✦</span>
+        <span>KIAMA, NSW</span>
+        <span class="marquee-diamond">✦</span>
+        <span>LAUREN & MATTHEW</span>
+        <span class="marquee-diamond">✦</span>
+        <span>30 DE NOVIEMBRE</span>
+        <span class="marquee-diamond">✦</span>
+        <span>GREYLEIGH ESTATE</span>
+        <span class="marquee-diamond">✦</span>
+        <span>KIAMA, NSW</span>
+        <span class="marquee-diamond">✦</span>
+      </div>
+    </div>
+
+    <!-- ─── COUNTDOWN ─── -->
+    <section class="countdown-premium">
+      <div class="section-number">02</div>
+      <div class="countdown-inner">
+        <div class="section-label">El gran día</div>
+        <div class="countdown-grid" id="countdown-grid">
+          <div class="count-block">
+            <div class="count-number-wrap">
+              <span class="count-number" id="days">00</span>
+            </div>
+            <span class="count-unit">Días</span>
+          </div>
+          <span class="count-divider">·</span>
+          <div class="count-block">
+            <div class="count-number-wrap">
+              <span class="count-number" id="hours">00</span>
+            </div>
+            <span class="count-unit">Horas</span>
+          </div>
+          <span class="count-divider">·</span>
+          <div class="count-block">
+            <div class="count-number-wrap">
+              <span class="count-number" id="minutes">00</span>
+            </div>
+            <span class="count-unit">Minutos</span>
+          </div>
+          <span class="count-divider">·</span>
+          <div class="count-block">
+            <div class="count-number-wrap">
+              <span class="count-number" id="seconds">00</span>
+            </div>
+            <span class="count-unit">Segundos</span>
+          </div>
+        </div>
+        <p class="countdown-sub">Para el comienzo de nuestra historia para siempre</p>
+      </div>
+      <!-- Imagen decorativa lateral -->
+      <div class="countdown-deco">
+        <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=500&q=80" alt="">
+      </div>
+    </section>
+
+    <!-- ─── HISTORIA ─── -->
+    <section class="story-luxury" id="story">
+      <div class="section-number">03</div>
+      <div class="story-container">
+        <div class="story-left">
+          <div class="story-image-wrapper">
+            <div class="tilt-frame" id="tiltFrame">
+              <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=900&q=85" alt="Pareja">
+              <div class="tilt-overlay"></div>
+            </div>
+            <div class="frame-tag">Kiama, NSW · 2024</div>
+            <!-- Elemento flotante decorativo -->
+            <div class="floating-badge">
+              <svg viewBox="0 0 100 100">
+                <path id="badgeCircle" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none"/>
+                <text>
+                  <textPath href="#badgeCircle" startOffset="0%">AMOR · COMPROMISO · PARA SIEMPRE · </textPath>
+                </text>
+              </svg>
+              <span>✦</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="story-right">
+          <div class="section-label gold">Nuestra historia</div>
+          <h2 class="section-title story-heading">
+            Seis años<br><em>de amor</em>
+          </h2>
+          <div class="story-divider"></div>
+          <p class="story-paragraph">Después de seis años caminando juntos, entre risas, viajes y sueños compartidos, decidimos sellar nuestro amor ante Dios y las personas que más queremos.</p>
+          <p class="story-paragraph">Queremos que seas parte de este capítulo que marca el inicio de nuestra historia para siempre.</p>
+
+          <!-- Timeline de momentos -->
+          <div class="story-timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <span class="timeline-year">2018</span>
+                <p>Nos conocimos en Kiama</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <span class="timeline-year">2021</span>
+                <p>Nuestro primer viaje juntos</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <span class="timeline-year">2024</span>
+                <p>La propuesta en Greyleigh</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── DETALLES ─── -->
+    <section class="details-elegant" id="details">
+      <div class="section-number">04</div>
+      <div class="details-inner">
+        <div class="section-label">El evento</div>
+        <h2 class="section-title centered">Los detalles</h2>
+
+        <div class="cards-container">
+          <div class="detail-card" data-card="ceremony">
+            <div class="card-bg-img">
+              <img src="https://images.unsplash.com/photo-1550005809-91ad75fb315f?w=400&q=70" alt="">
+            </div>
+            <div class="card-inner">
+              <div class="card-icon">
+                <svg viewBox="0 0 40 40" fill="none">
+                  <path d="M20 4C13.373 4 8 9.373 8 16c0 9 12 20 12 20s12-11 12-20c0-6.627-5.373-12-12-12z" stroke="currentColor" stroke-width="1.2"/>
+                  <circle cx="20" cy="16" r="4" stroke="currentColor" stroke-width="1.2"/>
+                </svg>
+              </div>
+              <div class="card-tag">Ceremonia</div>
+              <h3 class="card-time">2:00 <sup>PM</sup></h3>
+              <p class="card-location">165 TTT Long Beach Road</p>
+              <p class="card-location small">Jerrara, NSW 2533</p>
+              <a href="#" class="card-link">
+                <span>Cómo llegar</span>
+                <svg viewBox="0 0 20 20" fill="none"><path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </a>
+            </div>
+          </div>
+
+          <div class="cards-separator">
+            <div class="sep-line"></div>
+            <div class="sep-diamond">✦</div>
+            <div class="sep-line"></div>
+          </div>
+
+          <div class="detail-card" data-card="reception">
+            <div class="card-bg-img">
+              <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&q=70" alt="">
+            </div>
+            <div class="card-inner">
+              <div class="card-icon">
+                <svg viewBox="0 0 40 40" fill="none">
+                  <circle cx="20" cy="20" r="14" stroke="currentColor" stroke-width="1.2"/>
+                  <path d="M20 12v8l5 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="card-tag">Recepción</div>
+              <h3 class="card-time">6:00 <sup>PM</sup></h3>
+              <p class="card-location">Greyleigh Estate</p>
+              <p class="card-location small">Kiama, NSW</p>
+              <a href="#" class="card-link">
+                <span>Cómo llegar</span>
+                <svg viewBox="0 0 20 20" fill="none"><path d="M4 10h12M10 4l6 6-6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            </div>
+            <span class="info-label">Vestimenta</span>
+            <span class="info-value">Etiqueta formal</span>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1"/><path d="M3 9h18M9 21V9" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            </div>
+            <span class="info-label">Transporte</span>
+            <span class="info-value">Bus desde el centro</span>
+          </div>
+          <div class="info-item">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10z" stroke="currentColor" stroke-width="1"/><path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            </div>
+            <span class="info-label">Niños</span>
+            <span class="info-value">Solo adultos</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── GALERÍA HORIZONTAL ─── -->
+    <section class="gallery-luxury" id="gallery">
+      <div class="section-number">05</div>
+      <div class="gallery-header">
+        <div class="section-label">Momentos</div>
+        <h2 class="section-title">Nuestra galería</h2>
+      </div>
+
+      <!-- Galería en scroll horizontal GSAP -->
+      <div class="gallery-h-wrap" id="galleryWrap">
+        <div class="gallery-h-track" id="galleryTrack">
+          <div class="gallery-h-item" style="--ratio: 3/4;">
+            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=700&q=85" alt="Moment 1">
+            <div class="gallery-h-info"><span>01</span><p>Nuestro primer día</p></div>
+          </div>
+          <div class="gallery-h-item" style="--ratio: 4/3;">
+            <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?w=700&q=85" alt="Moment 2">
+            <div class="gallery-h-info"><span>02</span><p>Bajo el cielo azul</p></div>
+          </div>
+          <div class="gallery-h-item" style="--ratio: 3/4;">
+            <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?w=700&q=85" alt="Moment 3">
+            <div class="gallery-h-info"><span>03</span><p>La promesa</p></div>
+          </div>
+          <div class="gallery-h-item" style="--ratio: 4/5;">
+            <img src="https://images.unsplash.com/photo-1550005809-91ad75fb315f?w=700&q=85" alt="Moment 4">
+            <div class="gallery-h-info"><span>04</span><p>Siempre juntos</p></div>
+          </div>
+          <div class="gallery-h-item" style="--ratio: 3/4;">
+            <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=700&q=85" alt="Moment 5">
+            <div class="gallery-h-info"><span>05</span><p>Para siempre</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="gallery-drag-hint">
+        <div class="drag-line"></div>
+        <span>Arrastra para ver más</span>
+        <div class="drag-line"></div>
+      </div>
+    </section>
+
+    <!-- ─── CITA EDITORIAL ─── -->
+    <section class="quote-section">
+      <div class="quote-inner">
+        <div class="quote-mark">"</div>
+        <blockquote>
+          Lo mejor que puedo hacer es amarte, aunque eso significa que tengo que dejar de intentar controlarlo todo.
+        </blockquote>
+        <cite>— Nicholas Sparks</cite>
+      </div>
+    </section>
+
+    <!-- ─── RSVP ─── -->
+    <section class="rsvp-premium" id="rsvp">
+      <div class="section-number light">06</div>
+      <div class="rsvp-bg-deco">
+        <div class="rsvp-orb orb-1"></div>
+        <div class="rsvp-orb orb-2"></div>
+      </div>
+      <div class="rsvp-container">
+        <div class="section-label gold">Confirmación de asistencia</div>
+        <h2 class="section-title centered light">¿Nos acompañas?</h2>
+        <p class="rsvp-deadline">Confirma antes del <strong>30 de Octubre, 2024</strong></p>
+
+        <form id="rsvpForm" class="luxury-form" novalidate>
+          <div class="form-row">
+            <div class="input-group floating">
+              <input type="text" id="nameInput" placeholder=" " required>
+              <label for="nameInput">Nombre completo</label>
+              <div class="input-border"></div>
+            </div>
+            <div class="input-group floating">
+              <input type="email" id="emailInput" placeholder=" " required>
+              <label for="emailInput">Correo electrónico</label>
+              <div class="input-border"></div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="input-group">
+              <label class="static-label">¿Asistirás?</label>
+              <div class="toggle-buttons">
+                <button type="button" class="toggle-option active" data-assist="yes">
+                  <span class="toggle-check">✓</span> Sí, con gusto
+                </button>
+                <button type="button" class="toggle-option" data-assist="no">
+                  Lamento no poder
+                </button>
+              </div>
+            </div>
+            <div class="input-group floating" id="dietaryGroup">
+              <input type="text" id="dietInput" placeholder=" ">
+              <label for="dietInput">Restricción alimentaria</label>
+              <div class="input-border"></div>
+            </div>
+          </div>
+
+          <div class="input-group floating full">
+            <textarea id="msgInput" rows="3" placeholder=" "></textarea>
+            <label for="msgInput">Mensaje para los novios <span>(opcional)</span></label>
+            <div class="input-border"></div>
+          </div>
+
+          <button type="submit" class="btn-submit" id="rsvpSubmitBtn">
+            <span class="btn-text">Confirmar asistencia</span>
+            <div class="btn-arrow">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="btn-fill"></div>
+          </button>
+
+          <div id="rsvpSuccessMessage" class="success-message hidden">
+            <div class="success-ornament">✦</div>
+            <h3>¡Gracias por confirmar!</h3>
+            <p>Te esperamos con mucha alegría el 30 de noviembre.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ─── FOOTER ─── -->
+    <footer class="footer-luxury">
+      <div class="footer-marquee" aria-hidden="true">
+        <div class="footer-marquee-track">
+          <span>LAUREN & MATTHEW</span><span class="fm-dot">·</span>
+          <span>30 · XI · 2024</span><span class="fm-dot">·</span>
+          <span>GREYLEIGH ESTATE</span><span class="fm-dot">·</span>
+          <span>KIAMA NSW</span><span class="fm-dot">·</span>
+          <span>LAUREN & MATTHEW</span><span class="fm-dot">·</span>
+          <span>30 · XI · 2024</span><span class="fm-dot">·</span>
+          <span>GREYLEIGH ESTATE</span><span class="fm-dot">·</span>
+          <span>KIAMA NSW</span><span class="fm-dot">·</span>
+        </div>
+      </div>
+      <div class="footer-center">
+        <div class="footer-monogram">L & M</div>
+        <p class="footer-date">30 · XI · 2024</p>
+        <div class="footer-rule"></div>
+        <p class="footer-credit">Invitación digital diseñada con <span class="heart">♡</span> por <strong>Innovo Studio</strong></p>
+      </div>
+    </footer>
+  </main>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox-overlay">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <img id="lightboxImg" src="" alt="">
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
