@@ -1,65 +1,73 @@
 // ═══════════════════════════════════════════
-// INIT GSAP PLUGINS
+// INIT GSAP PLUGINS & CHECKERS
 // ═══════════════════════════════════════════
 gsap.registerPlugin(ScrollTrigger, CustomEase);
 
 CustomEase.create("expo.out", "M0,0 C0.16,1 0.3,1 1,1");
 CustomEase.create("soft.out", "M0,0 C0.25,1 0.5,1 1,1");
 
+const isTouchDevice = matchMedia('(hover: none) and (pointer: coarse)').matches;
+
 // ═══════════════════════════════════════════
-// CURSOR DUAL
+// CURSOR DUAL (Optimizado, sin ejecución en móvil)
 // ═══════════════════════════════════════════
-const cursorDot  = document.getElementById('cursorDot');
-const cursorRing = document.getElementById('cursorRing');
+if (!isTouchDevice) {
+  const cursorDot  = document.getElementById('cursorDot');
+  const cursorRing = document.getElementById('cursorRing');
 
-gsap.set([cursorDot, cursorRing], { opacity: 0, left: -100, top: -100 });
+  gsap.set([cursorDot, cursorRing], { opacity: 0, x: -100, y: -100 });
 
-let mouseX = -100, mouseY = -100;
-let ringX  = -100, ringY  = -100;
-let cursorVisible = false;
+  let mouseX = -100, mouseY = -100;
+  let ringX  = -100, ringY  = -100;
+  let cursorVisible = false;
 
-document.addEventListener('mousemove', (e) => {
-  mouseX = e.clientX;
-  mouseY = e.clientY;
-  gsap.set(cursorDot, { left: mouseX, top: mouseY });
-  if (!cursorVisible) {
-    cursorVisible = true;
-    gsap.to([cursorDot, cursorRing], { duration: 0.4, opacity: 1, ease: 'power2.out' });
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    
+    // Uso de transform en vez de left/top para evitar reflows pesados
+    gsap.set(cursorDot, { x: mouseX, y: mouseY });
+    
+    if (!cursorVisible) {
+      cursorVisible = true;
+      gsap.to([cursorDot, cursorRing], { duration: 0.4, opacity: 1, ease: 'power2.out' });
+    }
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    gsap.set(cursorRing, { x: ringX, y: ringY });
+    requestAnimationFrame(animateRing);
   }
-});
+  animateRing();
 
-function animateRing() {
-  ringX += (mouseX - ringX) * 0.1;
-  ringY += (mouseY - ringY) * 0.1;
-  gsap.set(cursorRing, { left: ringX, top: ringY });
-  requestAnimationFrame(animateRing);
+  document.querySelectorAll('a, button, .gallery-h-item, .detail-card, .tilt-frame').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      gsap.to(cursorDot,  { duration: 0.2, scale: 0, opacity: 0 });
+      gsap.to(cursorRing, { duration: 0.3, width: 56, height: 56, marginLeft: -28, marginTop: -28, borderColor: 'rgba(201,169,110,0.9)' });
+    });
+    el.addEventListener('mouseleave', () => {
+      gsap.to(cursorDot,  { duration: 0.2, scale: 1, opacity: 1 });
+      gsap.to(cursorRing, { duration: 0.3, width: 36, height: 36, marginLeft: -18, marginTop: -18, borderColor: 'rgba(201,169,110,0.6)' });
+    });
+  });
+
+  document.addEventListener('mouseleave', () => {
+    gsap.to([cursorDot, cursorRing], { duration: 0.3, opacity: 0 });
+    cursorVisible = false;
+  });
+  document.addEventListener('mouseenter', () => {
+    if (cursorVisible) gsap.to([cursorDot, cursorRing], { duration: 0.3, opacity: 1 });
+  });
 }
-animateRing();
-
-document.querySelectorAll('a, button, .gallery-h-item, .detail-card, .tilt-frame').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    gsap.to(cursorDot,  { duration: 0.25, scale: 0, opacity: 0, ease: 'power2.out' });
-    gsap.to(cursorRing, { duration: 0.4, width: 56, height: 56, marginLeft: -28, marginTop: -28, borderColor: 'rgba(201,169,110,0.9)', ease: 'power3.out' });
-  });
-  el.addEventListener('mouseleave', () => {
-    gsap.to(cursorDot,  { duration: 0.25, scale: 1, opacity: 1, ease: 'power2.out' });
-    gsap.to(cursorRing, { duration: 0.4, width: 36, height: 36, marginLeft: -18, marginTop: -18, borderColor: 'rgba(201,169,110,0.6)', ease: 'power3.out' });
-  });
-});
-
-document.addEventListener('mouseleave', () => {
-  gsap.to([cursorDot, cursorRing], { duration: 0.3, opacity: 0 });
-  cursorVisible = false;
-});
-document.addEventListener('mouseenter', () => {
-  if (cursorVisible) gsap.to([cursorDot, cursorRing], { duration: 0.3, opacity: 1 });
-});
 
 // ═══════════════════════════════════════════
-// LOADER
+// LOADER (Ágil y Retentivo)
 // ═══════════════════════════════════════════
 const loader      = document.getElementById('luxury-loader');
 const mainContent = document.getElementById('wedding-content');
+const openBtn     = document.getElementById('openInviteBtn');
 let loaderDone    = false;
 
 function openInvitation() {
@@ -68,152 +76,86 @@ function openInvitation() {
 
   const tl = gsap.timeline({
     onComplete: () => {
+      loader.setAttribute('aria-busy', 'false');
       gsap.to(loader, {
-        duration: 0.9,
+        duration: 0.6,
         opacity: 0,
         ease: 'power2.inOut',
         onComplete: () => {
           loader.classList.add('hidden');
           mainContent.classList.remove('hidden');
+          mainContent.setAttribute('aria-hidden', 'false');
           document.body.style.overflow = 'auto';
-          requestAnimationFrame(() => {
-            initHeroAnimation();
-            initScrollAnimations();
-            startCountdown();
+          
+          initHeroAnimation();
+          initScrollAnimations();
+          startCountdown();
+          if(!isTouchDevice) {
             initTiltEffect();
-            initGalleryDrag();
             initMagneticButton();
-            initRSVP();
-            initGalleryLightbox();
-          });
+          }
+          initGalleryDrag();
+          initRSVP();
         }
       });
     }
   });
 
-  tl
-    .to('.envelope-flap', {
-      duration: 0.9,
-      rotationX: -180,
-      transformOrigin: 'top center',
-      ease: 'power3.inOut'
-    })
-    .to('.envelope-letter', {
-      duration: 0.8,
-      y: -100,
-      ease: 'back.out(1.4)'
-    }, '-=0.5')
-    .to('.envelope-seal', {
-      duration: 0.35,
-      scale: 0,
-      opacity: 0,
-      ease: 'power2.in'
-    }, '-=0.5')
-    .to('.loader-bottom', {
-      duration: 0.3,
-      opacity: 0,
-      y: 10
-    }, '-=0.2')
-    .to('.envelope-premium', {
-      duration: 0.4,
-      scale: 0.95,
-      opacity: 0,
-      ease: 'power2.in'
-    });
+  tl.to('.envelope-flap', { duration: 0.6, rotationX: -180, transformOrigin: 'top center', ease: 'power3.inOut' })
+    .to('.envelope-letter', { duration: 0.6, y: -100, ease: 'back.out(1.2)' }, '-=0.3')
+    .to('.envelope-seal', { duration: 0.2, scale: 0, opacity: 0 }, '-=0.5')
+    .to('.loader-bottom', { duration: 0.2, opacity: 0, y: 10 }, '-=0.4')
+    .to('.envelope-premium', { duration: 0.3, scale: 0.95, opacity: 0, ease: 'power2.in' }, '+=0.2');
 }
 
-loader.addEventListener('click', openInvitation);
-setTimeout(() => { if (!loaderDone) openInvitation(); }, 4500);
+openBtn.addEventListener('click', openInvitation);
+setTimeout(() => { if (!loaderDone) openInvitation(); }, 2500);
 
 // ═══════════════════════════════════════════
-// HERO ANIMATION
+// HERO ANIMATION (Parallax Real con yPercent)
 // ═══════════════════════════════════════════
 function initHeroAnimation() {
-  const tl = gsap.timeline({ delay: 0.1 });
+  const tl = gsap.timeline();
 
-  tl.from('.hero-img', {
-    duration: 2,
-    scale: 1.15,
-    ease: 'expo.out'
-  });
+  tl.from('.hero-img', { duration: 1.5, scale: 1.1, ease: 'expo.out' })
+    .from('.hero-eyebrow', { duration: 0.8, opacity: 0, y: 20, ease: 'power2.out' }, '-=1')
+    .to('.name-first', { duration: 0.8, y: 0, opacity: 1, ease: 'expo.out' }, '-=0.8')
+    .to('.ampersand-block em', { duration: 0.6, y: 0, opacity: 1, ease: 'expo.out' }, '-=0.6')
+    .to('.name-second', { duration: 0.8, y: 0, opacity: 1, ease: 'expo.out' }, '-=0.6')
+    .to('.hero-rule', { duration: 0.6, opacity: 1, ease: 'power2.out' }, '-=0.2')
+    .to(['.rule-line.left', '.rule-line.right'], { duration: 0.6, scaleX: 1, ease: 'expo.out' }, '-=0.4')
+    .to('.hero-meta', { duration: 0.6, opacity: 1, y: 0, ease: 'power2.out' }, '-=0.3')
+    .to('.scroll-cta', { duration: 0.6, opacity: 1, ease: 'power2.out' }, '-=0.2');
 
-  tl.from('.hero-eyebrow', {
-    duration: 1,
+  gsap.fromTo('.hero-img', 
+    { yPercent: 0 },
+    {
+      yPercent: 20,
+      ease: "none",
+      scrollTrigger: {
+        trigger: '.hero',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true
+      }
+    }
+  );
+
+  gsap.to('.hero-content', {
+    yPercent: 30,
     opacity: 0,
-    y: 20,
-    ease: 'power2.out'
-  }, '-=1.6');
-
-  tl.to('.name-first', {
-    duration: 1,
-    y: 0, opacity: 1,
-    ease: 'expo.out'
-  }, '-=1.2');
-
-  tl.to('.ampersand-block em', {
-    duration: 0.8,
-    y: 0, opacity: 1,
-    ease: 'expo.out'
-  }, '-=0.75');
-
-  tl.to('.name-second', {
-    duration: 1,
-    y: 0, opacity: 1,
-    ease: 'expo.out'
-  }, '-=0.8');
-
-  tl.to('.hero-rule', {
-    duration: 0.8,
-    opacity: 1,
-    ease: 'power2.out'
-  }, '-=0.4');
-
-  tl.to(['.rule-line.left', '.rule-line.right'], {
-    duration: 0.8,
-    scaleX: 1,
-    ease: 'expo.out',
-    stagger: 0
-  }, '-=0.6');
-
-  tl.to('.hero-meta', {
-    duration: 0.7,
-    opacity: 1,
-    y: 0,
-    ease: 'power2.out'
-  }, '-=0.4');
-
-  tl.to('.scroll-cta', {
-    duration: 0.7,
-    opacity: 1,
-    ease: 'power2.out'
-  }, '-=0.2');
-
-  gsap.to('.hero-img', {
+    ease: "none",
     scrollTrigger: {
       trigger: '.hero',
       start: 'top top',
       end: 'bottom top',
-      scrub: 1.5
-    },
-    y: 180,
-    ease: 'none'
-  });
-
-  gsap.to('.hero-content', {
-    scrollTrigger: {
-      trigger: '.hero',
-      start: 'center center',
-      end: 'bottom top',
-      scrub: 1
-    },
-    opacity: 0,
-    y: -60,
-    ease: 'none'
+      scrub: true
+    }
   });
 }
 
 // ═══════════════════════════════════════════
-// SCROLL ANIMATIONS (sin SplitText)
+// SCROLL ANIMATIONS
 // ═══════════════════════════════════════════
 function initScrollAnimations() {
 
@@ -244,23 +186,18 @@ function initScrollAnimations() {
     scrollTrigger: { trigger: '.story-luxury', start: 'top 70%' },
     scale: 0, opacity: 0, duration: 0.8, ease: 'back.out(1.7)', delay: 0.6
   });
-
-  // Título de historia (animación completa, sin SplitText)
   gsap.from('.story-heading', {
     scrollTrigger: { trigger: '.story-luxury', start: 'top 75%' },
     y: 40, opacity: 0, duration: 1.2, ease: 'expo.out', delay: 0.3
   });
-
   gsap.from('.story-divider', {
     scrollTrigger: { trigger: '.story-right', start: 'top 80%' },
     width: 0, duration: 0.8, ease: 'power2.out', delay: 0.6
   });
-
   gsap.from('.story-paragraph', {
     scrollTrigger: { trigger: '.story-right', start: 'top 80%' },
     y: 30, opacity: 0, duration: 1, stagger: 0.2, ease: 'power2.out', delay: 0.5
   });
-
   gsap.from('.timeline-item', {
     scrollTrigger: { trigger: '.story-timeline', start: 'top 85%' },
     x: -30, opacity: 0, duration: 0.8, stagger: 0.2, ease: 'power2.out'
@@ -478,7 +415,8 @@ function initGalleryDrag() {
   wrap.addEventListener('mousemove', () => { hasDragged = true; });
 
   document.querySelectorAll('.gallery-h-item').forEach(item => {
-    item.addEventListener('click', () => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
       if (hasDragged) return;
       const imgSrc = item.querySelector('img').src;
       openLightbox(imgSrc);
@@ -506,10 +444,6 @@ function closeLightbox() {
 document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
 lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
-
-function initGalleryLightbox() {
-  // ya integrada arriba
-}
 
 // ═══════════════════════════════════════════
 // BOTÓN MAGNÉTICO
