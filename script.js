@@ -11,42 +11,55 @@ CustomEase.create("soft.out", "M0,0 C0.25,1 0.5,1 1,1");
 // ═══════════════════════════════════════════
 const cursorDot  = document.getElementById('cursorDot');
 const cursorRing = document.getElementById('cursorRing');
-let mouseX = 0, mouseY = 0;
-let ringX = 0, ringY = 0;
+
+// Empezar ocultos fuera de pantalla hasta el primer mousemove
+gsap.set([cursorDot, cursorRing], { opacity: 0, left: -100, top: -100 });
+
+let mouseX = -100, mouseY = -100;
+let ringX  = -100, ringY  = -100;
+let cursorVisible = false;
 
 document.addEventListener('mousemove', (e) => {
   mouseX = e.clientX;
   mouseY = e.clientY;
-  gsap.to(cursorDot, { duration: 0.1, x: mouseX, y: mouseY, ease: 'none' });
+
+  // Mover el dot directo con left/top para evitar conflicto con transform CSS
+  gsap.set(cursorDot, { left: mouseX, top: mouseY });
+
+  if (!cursorVisible) {
+    cursorVisible = true;
+    gsap.to([cursorDot, cursorRing], { duration: 0.4, opacity: 1, ease: 'power2.out' });
+  }
 });
 
-// Ring sigue con lag suave
+// Ring sigue con lag suave via RAF
 function animateRing() {
-  ringX += (mouseX - ringX) * 0.12;
-  ringY += (mouseY - ringY) * 0.12;
-  gsap.set(cursorRing, { x: ringX, y: ringY });
+  ringX += (mouseX - ringX) * 0.1;
+  ringY += (mouseY - ringY) * 0.1;
+  gsap.set(cursorRing, { left: ringX, top: ringY });
   requestAnimationFrame(animateRing);
 }
 animateRing();
 
-// Estados del cursor
+// Estados hover
 document.querySelectorAll('a, button, .gallery-h-item, .detail-card, .tilt-frame').forEach(el => {
   el.addEventListener('mouseenter', () => {
-    gsap.to(cursorDot,  { duration: 0.3, scale: 0, opacity: 0, ease: 'power2.out' });
-    gsap.to(cursorRing, { duration: 0.4, width: 56, height: 56, borderColor: 'rgba(201,169,110,0.8)', ease: 'expo.out' });
+    gsap.to(cursorDot,  { duration: 0.25, scale: 0, opacity: 0, ease: 'power2.out' });
+    gsap.to(cursorRing, { duration: 0.4, width: 56, height: 56, marginLeft: -28, marginTop: -28, borderColor: 'rgba(201,169,110,0.9)', ease: 'power3.out' });
   });
   el.addEventListener('mouseleave', () => {
-    gsap.to(cursorDot,  { duration: 0.3, scale: 1, opacity: 1, ease: 'power2.out' });
-    gsap.to(cursorRing, { duration: 0.4, width: 36, height: 36, borderColor: 'rgba(201,169,110,0.6)', ease: 'expo.out' });
+    gsap.to(cursorDot,  { duration: 0.25, scale: 1, opacity: 1, ease: 'power2.out' });
+    gsap.to(cursorRing, { duration: 0.4, width: 36, height: 36, marginLeft: -18, marginTop: -18, borderColor: 'rgba(201,169,110,0.6)', ease: 'power3.out' });
   });
 });
 
-// Cursor hide/show al salir/entrar ventana
+// Ocultar al salir de la ventana
 document.addEventListener('mouseleave', () => {
   gsap.to([cursorDot, cursorRing], { duration: 0.3, opacity: 0 });
+  cursorVisible = false;
 });
 document.addEventListener('mouseenter', () => {
-  gsap.to([cursorDot, cursorRing], { duration: 0.3, opacity: 1 });
+  if (cursorVisible) gsap.to([cursorDot, cursorRing], { duration: 0.3, opacity: 1 });
 });
 
 // ═══════════════════════════════════════════
