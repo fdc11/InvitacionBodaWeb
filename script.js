@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════
 // INIT GSAP PLUGINS
 // ═══════════════════════════════════════════
-gsap.registerPlugin(ScrollTrigger, SplitText, CustomEase);
+gsap.registerPlugin(ScrollTrigger, CustomEase);
 
 CustomEase.create("expo.out", "M0,0 C0.16,1 0.3,1 1,1");
 CustomEase.create("soft.out", "M0,0 C0.25,1 0.5,1 1,1");
@@ -12,7 +12,6 @@ CustomEase.create("soft.out", "M0,0 C0.25,1 0.5,1 1,1");
 const cursorDot  = document.getElementById('cursorDot');
 const cursorRing = document.getElementById('cursorRing');
 
-// Empezar ocultos fuera de pantalla hasta el primer mousemove
 gsap.set([cursorDot, cursorRing], { opacity: 0, left: -100, top: -100 });
 
 let mouseX = -100, mouseY = -100;
@@ -22,17 +21,13 @@ let cursorVisible = false;
 document.addEventListener('mousemove', (e) => {
   mouseX = e.clientX;
   mouseY = e.clientY;
-
-  // Mover el dot directo con left/top para evitar conflicto con transform CSS
   gsap.set(cursorDot, { left: mouseX, top: mouseY });
-
   if (!cursorVisible) {
     cursorVisible = true;
     gsap.to([cursorDot, cursorRing], { duration: 0.4, opacity: 1, ease: 'power2.out' });
   }
 });
 
-// Ring sigue con lag suave via RAF
 function animateRing() {
   ringX += (mouseX - ringX) * 0.1;
   ringY += (mouseY - ringY) * 0.1;
@@ -41,7 +36,6 @@ function animateRing() {
 }
 animateRing();
 
-// Estados hover
 document.querySelectorAll('a, button, .gallery-h-item, .detail-card, .tilt-frame').forEach(el => {
   el.addEventListener('mouseenter', () => {
     gsap.to(cursorDot,  { duration: 0.25, scale: 0, opacity: 0, ease: 'power2.out' });
@@ -53,7 +47,6 @@ document.querySelectorAll('a, button, .gallery-h-item, .detail-card, .tilt-frame
   });
 });
 
-// Ocultar al salir de la ventana
 document.addEventListener('mouseleave', () => {
   gsap.to([cursorDot, cursorRing], { duration: 0.3, opacity: 0 });
   cursorVisible = false;
@@ -83,7 +76,6 @@ function openInvitation() {
           loader.classList.add('hidden');
           mainContent.classList.remove('hidden');
           document.body.style.overflow = 'auto';
-          // Pequeño delay para que el DOM esté listo
           requestAnimationFrame(() => {
             initHeroAnimation();
             initScrollAnimations();
@@ -134,19 +126,17 @@ loader.addEventListener('click', openInvitation);
 setTimeout(() => { if (!loaderDone) openInvitation(); }, 4500);
 
 // ═══════════════════════════════════════════
-// HERO ANIMATION (entrada cinematográfica)
+// HERO ANIMATION
 // ═══════════════════════════════════════════
 function initHeroAnimation() {
   const tl = gsap.timeline({ delay: 0.1 });
 
-  // Parallax zoom al cargar
   tl.from('.hero-img', {
     duration: 2,
     scale: 1.15,
     ease: 'expo.out'
   });
 
-  // Eyebrow
   tl.from('.hero-eyebrow', {
     duration: 1,
     opacity: 0,
@@ -154,7 +144,6 @@ function initHeroAnimation() {
     ease: 'power2.out'
   }, '-=1.6');
 
-  // Nombres — entrada desde abajo con clip
   tl.to('.name-first', {
     duration: 1,
     y: 0, opacity: 1,
@@ -173,7 +162,6 @@ function initHeroAnimation() {
     ease: 'expo.out'
   }, '-=0.8');
 
-  // Regla + meta + scroll
   tl.to('.hero-rule', {
     duration: 0.8,
     opacity: 1,
@@ -200,7 +188,6 @@ function initHeroAnimation() {
     ease: 'power2.out'
   }, '-=0.2');
 
-  // Parallax de hero al hacer scroll
   gsap.to('.hero-img', {
     scrollTrigger: {
       trigger: '.hero',
@@ -212,7 +199,6 @@ function initHeroAnimation() {
     ease: 'none'
   });
 
-  // Fade-out del hero content al hacer scroll
   gsap.to('.hero-content', {
     scrollTrigger: {
       trigger: '.hero',
@@ -227,11 +213,11 @@ function initHeroAnimation() {
 }
 
 // ═══════════════════════════════════════════
-// SCROLL ANIMATIONS
+// SCROLL ANIMATIONS (sin SplitText)
 // ═══════════════════════════════════════════
 function initScrollAnimations() {
 
-  // ── COUNTDOWN ──
+  // COUNTDOWN
   gsap.from('.count-number', {
     scrollTrigger: { trigger: '.countdown-premium', start: 'top 75%' },
     y: 60, opacity: 0, duration: 1, stagger: 0.12, ease: 'expo.out'
@@ -249,7 +235,7 @@ function initScrollAnimations() {
     y: 20, opacity: 0, duration: 0.8, ease: 'power2.out', delay: 0.5
   });
 
-  // ── HISTORIA ──
+  // HISTORIA
   gsap.from('.tilt-frame', {
     scrollTrigger: { trigger: '.story-luxury', start: 'top 70%' },
     x: -80, opacity: 0, duration: 1.4, ease: 'expo.out'
@@ -259,16 +245,11 @@ function initScrollAnimations() {
     scale: 0, opacity: 0, duration: 0.8, ease: 'back.out(1.7)', delay: 0.6
   });
 
-  // Split text del título de historia
-  const storyTitle = document.querySelector('.story-heading');
-  if (storyTitle) {
-    const split = new SplitText(storyTitle, { type: 'lines', linesClass: 'split-line' });
-    gsap.from(split.lines, {
-      scrollTrigger: { trigger: '.story-luxury', start: 'top 75%' },
-      y: '100%', opacity: 0,
-      duration: 1.2, stagger: 0.15, ease: 'expo.out', delay: 0.3
-    });
-  }
+  // Título de historia (animación completa, sin SplitText)
+  gsap.from('.story-heading', {
+    scrollTrigger: { trigger: '.story-luxury', start: 'top 75%' },
+    y: 40, opacity: 0, duration: 1.2, ease: 'expo.out', delay: 0.3
+  });
 
   gsap.from('.story-divider', {
     scrollTrigger: { trigger: '.story-right', start: 'top 80%' },
@@ -285,88 +266,73 @@ function initScrollAnimations() {
     x: -30, opacity: 0, duration: 0.8, stagger: 0.2, ease: 'power2.out'
   });
 
-  // ── DETALLES ──
+  // DETALLES
   gsap.from(['.section-label', '.section-title.centered'], {
     scrollTrigger: { trigger: '.details-elegant', start: 'top 75%' },
     y: 40, opacity: 0, duration: 1, stagger: 0.15, ease: 'expo.out'
   });
-
   gsap.from('.detail-card', {
     scrollTrigger: { trigger: '.cards-container', start: 'top 80%' },
     y: 60, opacity: 0, duration: 1.1, stagger: 0.2, ease: 'expo.out'
   });
-
   gsap.from('.info-item', {
     scrollTrigger: { trigger: '.info-grid', start: 'top 85%' },
     y: 30, opacity: 0, duration: 0.8, stagger: 0.15, ease: 'power2.out'
   });
 
-  // ── GALERÍA ──
+  // GALERÍA
   gsap.from('.gallery-header .section-label, .gallery-header .section-title', {
     scrollTrigger: { trigger: '.gallery-luxury', start: 'top 80%' },
     y: 30, opacity: 0, duration: 1, stagger: 0.15, ease: 'expo.out'
   });
-
   gsap.from('.gallery-h-item', {
     scrollTrigger: { trigger: '.gallery-h-wrap', start: 'top 85%' },
     y: 80, opacity: 0, duration: 1.2, stagger: 0.12, ease: 'expo.out'
   });
 
-  // ── CITA ──
+  // CITA
   gsap.from('.quote-mark', {
     scrollTrigger: { trigger: '.quote-section', start: 'top 75%' },
     y: 20, opacity: 0, duration: 0.8, ease: 'power2.out'
   });
-
-  // Split text de la cita
-  const quoteEl = document.querySelector('blockquote');
-  if (quoteEl) {
-    const splitQuote = new SplitText(quoteEl, { type: 'lines' });
-    gsap.from(splitQuote.lines, {
-      scrollTrigger: { trigger: '.quote-section', start: 'top 75%' },
-      y: 30, opacity: 0,
-      duration: 0.9, stagger: 0.15, ease: 'power2.out', delay: 0.2
-    });
-  }
-
+  gsap.from('blockquote', {
+    scrollTrigger: { trigger: '.quote-section', start: 'top 75%' },
+    y: 30, opacity: 0, duration: 0.9, ease: 'power2.out', delay: 0.2
+  });
   gsap.from('cite', {
     scrollTrigger: { trigger: '.quote-section', start: 'top 70%' },
     y: 15, opacity: 0, duration: 0.6, ease: 'power2.out', delay: 0.6
   });
 
-  // ── RSVP ──
+  // RSVP
   gsap.from('.rsvp-container .section-label', {
     scrollTrigger: { trigger: '.rsvp-premium', start: 'top 75%' },
     y: 30, opacity: 0, duration: 0.8, ease: 'expo.out'
   });
-
   gsap.from('.rsvp-container .section-title', {
     scrollTrigger: { trigger: '.rsvp-premium', start: 'top 72%' },
     y: 40, opacity: 0, duration: 1, ease: 'expo.out', delay: 0.15
   });
-
   gsap.from('.rsvp-deadline', {
     scrollTrigger: { trigger: '.rsvp-premium', start: 'top 68%' },
     y: 20, opacity: 0, duration: 0.7, ease: 'power2.out', delay: 0.3
   });
-
   gsap.from('.input-group', {
     scrollTrigger: { trigger: '.luxury-form', start: 'top 85%' },
     y: 25, opacity: 0, duration: 0.7, stagger: 0.1, ease: 'power2.out', delay: 0.2
   });
-
   gsap.from('.btn-submit', {
     scrollTrigger: { trigger: '.luxury-form', start: 'top 75%' },
     y: 20, opacity: 0, duration: 0.8, ease: 'expo.out', delay: 0.6
   });
 
-  // ── FOOTER ──
+  // FOOTER
   gsap.from('.footer-monogram', {
     scrollTrigger: { trigger: '.footer-luxury', start: 'top 80%' },
     scale: 0.85, opacity: 0, duration: 1.2, ease: 'expo.out'
   });
 
-  // ── SECTION NUMBERS ── aparecen con fade
+  // NÚMEROS DE SECCIÓN
   gsap.utils.toArray('.section-number').forEach(el => {
     gsap.from(el, {
       scrollTrigger: { trigger: el.closest('section'), start: 'top 70%' },
@@ -374,7 +340,7 @@ function initScrollAnimations() {
     });
   });
 
-  // ── Orbs RSVP ─── parallax
+  // ORBS RSVP
   gsap.to('.orb-1', {
     scrollTrigger: { trigger: '.rsvp-premium', start: 'top bottom', end: 'bottom top', scrub: 1.5 },
     y: -100, ease: 'none'
@@ -440,7 +406,6 @@ function initTiltEffect() {
       transformPerspective: 900,
       ease: 'power2.out'
     });
-    // Highlight sutil que sigue al mouse
     gsap.to(frame.querySelector('.tilt-overlay'), {
       duration: 0.4,
       background: `radial-gradient(circle at ${(x * 50) + 50}% ${(y * 50) + 50}%, rgba(201,169,110,0.18), transparent 60%)`,
@@ -462,7 +427,7 @@ function initTiltEffect() {
 }
 
 // ═══════════════════════════════════════════
-// GALERÍA DRAG HORIZONTAL (como Awwwards)
+// GALERÍA DRAG HORIZONTAL
 // ═══════════════════════════════════════════
 function initGalleryDrag() {
   const wrap  = document.getElementById('galleryWrap');
@@ -493,7 +458,6 @@ function initGalleryDrag() {
     wrap.style.cursor = 'grab';
   });
 
-  // Touch support
   wrap.addEventListener('touchstart', (e) => {
     startX = e.touches[0].clientX - currentX;
   }, { passive: true });
@@ -502,7 +466,6 @@ function initGalleryDrag() {
     targetX = clamp(e.touches[0].clientX - startX, maxDrag, 0);
   }, { passive: true });
 
-  // Suavizado del movimiento (RAF loop)
   function dragLoop() {
     currentX += (targetX - currentX) * 0.1;
     gsap.set(track, { x: currentX });
@@ -510,7 +473,6 @@ function initGalleryDrag() {
   }
   dragLoop();
 
-  // Click en item → lightbox (solo si no fue drag)
   let hasDragged = false;
   wrap.addEventListener('mousedown', () => { hasDragged = false; });
   wrap.addEventListener('mousemove', () => { hasDragged = true; });
@@ -544,6 +506,10 @@ function closeLightbox() {
 document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
 lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+
+function initGalleryLightbox() {
+  // ya integrada arriba
+}
 
 // ═══════════════════════════════════════════
 // BOTÓN MAGNÉTICO
@@ -593,13 +559,11 @@ function initRSVP() {
     e.preventDefault();
     const btn = form.querySelector('.btn-submit');
 
-    // Feedback táctil
     gsap.timeline()
       .to(btn, { duration: 0.1, scale: 0.97, ease: 'power2.in' })
       .to(btn, { duration: 0.2, scale: 1, ease: 'back.out(2)' });
 
     setTimeout(() => {
-      // Fade out formulario
       const formEls = form.querySelectorAll('.form-row, .input-group.full, .btn-submit');
       gsap.to(formEls, {
         duration: 0.4,
@@ -609,7 +573,6 @@ function initRSVP() {
         ease: 'power2.in',
         onComplete: () => {
           formEls.forEach(el => el.style.display = 'none');
-          // Show success
           gsap.fromTo(successMsg,
             { opacity: 0, scale: 0.85, display: 'block' },
             { opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.5)', display: 'block' }
@@ -621,14 +584,7 @@ function initRSVP() {
   });
 }
 
-// ═══════════════════════════════════════════
-// BADGE ANIMADO (spinning text)
-// ═══════════════════════════════════════════
-// Ya manejado por CSS animation.
-
-// ═══════════════════════════════════════════
-// SMOOTH SCROLL to sections (opcional)
-// ═══════════════════════════════════════════
+// SMOOTH SCROLL
 document.querySelectorAll('a[href^="#"]').forEach(link => {
   link.addEventListener('click', (e) => {
     const target = document.querySelector(link.getAttribute('href'));
@@ -641,9 +597,3 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
     });
   });
 });
-
-// ═══════════════════════════════════════════
-// INTERSECTION OBSERVER fallback visual
-// (para navegadores sin ScrollTrigger correcto)
-// ═══════════════════════════════════════════
-// ScrollTrigger maneja todo. No se necesita.
